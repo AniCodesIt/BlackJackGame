@@ -39,14 +39,7 @@ namespace BlackJackGameRepo
         {
             return PlayerHand;
         }
-        public void FinishDealersHand()
-        {
-            int count = 0;
-            foreach (int card in DealerHand)
-            {
-                count += card;
-            }
-        }
+       
 
 
 
