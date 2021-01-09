@@ -6,9 +6,18 @@ using System.Threading.Tasks;
 using BlackJackGameRepo;
 
 namespace BlackJackGame
+
 {
     public class BlackJackGameUI
+
     {
+        //Addess what happens when player "busts" while in Hit()
+        //Address what happens when Dealer "busts" while in Stand()
+        //Compare dealer and player hand:
+        // -- evaluate total of player hand
+        // -- evaluate total of dealer hand
+        //  --compare totals and present the appropriate message
+        bool isRunning = true;
         GameRepo repoWindow = new GameRepo();
         public void RunMenu()
         {
@@ -21,18 +30,20 @@ namespace BlackJackGame
             dealtCard = repoWindow.DealACard();
             repoWindow.AssignToPlayerHand(dealtCard);
 
-            DisplayDealersHand();
+            DisplayDealersHand(true);
             Console.WriteLine();
             Console.WriteLine();
             DisplayPlayersHand();
 
-            bool isRunning = true;
+            
             while (isRunning)
             {
                 Console.WriteLine("\n" +
                    "1. To hit \n" +
                    "2. To stand \n" +
-                   "3. To exit the program");
+                   "3. To exit the program ");
+                Console.WriteLine();
+                   
 
                 var userInput = Console.ReadLine();
 
@@ -44,13 +55,9 @@ namespace BlackJackGame
                     case "2":
                         Stand();
                         break;
-
-                    //case "3":
-                    //    RemoveAMenuItem();
-                    //    break;
-                    //case "3":
-                    //isRunning = false;
-                    //break;
+                    case "3":
+                        isRunning = false;
+                        break;
                     default:
                         break;
                 }
@@ -62,21 +69,48 @@ namespace BlackJackGame
         private void Stand()
         {
             List<int> dealer = repoWindow.DisplayDealerHand();
-            int total;
-            total = EvaluateHand(dealer);
+            int dealerTotal;
+            dealerTotal = EvaluateHand(dealer);
             //evaluate dealer's hand and keep adding cards until total >= 17.
-            while (total < 17)
+            while (dealerTotal < 17)
             {
 
-                total = EvaluateHand(dealer);
                 int hitCard = repoWindow.DealACard();
                 repoWindow.AssignToDealerHand(hitCard);
+                dealerTotal = EvaluateHand(dealer);
             }
             DisplayPlayersHand();
-            DisplayDealersHand();
+            DisplayDealersHand(false);
+            if (dealerTotal > 21)
+            {
+                Console.WriteLine("The dealer busts at " + dealerTotal + ".\n" +
+                    " You win! ");
+                isRunning = false;
+            }
+            else
+            {
+                int playerTotal;
+                List<int> player = repoWindow.DisplayPlayerHand();
+                playerTotal =  EvaluateHand(player);
 
-
-            
+                if( dealerTotal > playerTotal)
+                {
+                    Console.WriteLine("The dealer has won! ");
+                    isRunning = false;
+                }
+                if( playerTotal > dealerTotal)
+                {
+                    Console.WriteLine("The player has won! ");
+                    isRunning = false;
+                }
+                if ( playerTotal == dealerTotal)
+                {
+                    Console.WriteLine("There is a draw! ");
+                    isRunning = false;
+                }
+                     
+            }
+            Console.ReadLine();
         }
         private int EvaluateHand(List<int> Hand)
         {
@@ -110,7 +144,17 @@ namespace BlackJackGame
             int hitCard = repoWindow.DealACard();
             repoWindow.AssignToPlayerHand(hitCard);
             DisplayPlayersHand();
-
+            List<int> player = repoWindow.DisplayPlayerHand();
+            int playerTotal;
+            playerTotal = EvaluateHand(player);
+            if (playerTotal > 21)
+            {
+                Console.WriteLine("The player busts at " + playerTotal + ". The dealer wins! ");
+                DisplayDealersHand(false);
+                Console.ReadLine();
+                isRunning = false;
+            }
+           
 
         }
         private void DisplayPlayersHand()
@@ -142,16 +186,22 @@ namespace BlackJackGame
             Console.WriteLine();
         }
 
-        private void DisplayDealersHand()
+        private void DisplayDealersHand(bool SuppressFirstCard)
         {
             List<int> dealer = repoWindow.DisplayDealerHand();
             Console.WriteLine("Dealers Hand ");
             bool firstTime = true;
+            if (SuppressFirstCard == false)
+            {
+                firstTime = false;
+            }
             foreach (int card in dealer)
             {
                 if (firstTime == true)
                 {
-                    Console.Write("X ");
+                       Console.Write("* ");
+                  
+               
                     firstTime = false;
                 }
 
@@ -180,6 +230,7 @@ namespace BlackJackGame
                 }
 
             }
+            Console.WriteLine();
         }
     }
 }
