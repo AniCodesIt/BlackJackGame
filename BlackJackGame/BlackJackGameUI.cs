@@ -11,12 +11,7 @@ namespace BlackJackGame
     public class BlackJackGameUI
 
     {
-        //Addess what happens when player "busts" while in Hit()
-        //Address what happens when Dealer "busts" while in Stand()
-        //Compare dealer and player hand:
-        // -- evaluate total of player hand
-        // -- evaluate total of dealer hand
-        //  --compare totals and present the appropriate message
+
         bool isRunning = true;
         GameRepo repoWindow = new GameRepo();
         public void RunMenu()
@@ -35,7 +30,7 @@ namespace BlackJackGame
             Console.WriteLine();
             DisplayPlayersHand();
 
-            
+
             while (isRunning)
             {
                 Console.WriteLine("\n" +
@@ -43,7 +38,7 @@ namespace BlackJackGame
                    "2. To stand \n" +
                    "3. To exit the program ");
                 Console.WriteLine();
-                   
+
 
                 var userInput = Console.ReadLine();
 
@@ -70,8 +65,7 @@ namespace BlackJackGame
         {
             List<int> dealer = repoWindow.DisplayDealerHand();
             int dealerTotal;
-            dealerTotal = EvaluateHand(dealer);
-            //evaluate dealer's hand and keep adding cards until total >= 17.
+            dealerTotal = EvaluateHand(dealer);          
             while (dealerTotal < 17)
             {
 
@@ -91,24 +85,24 @@ namespace BlackJackGame
             {
                 int playerTotal;
                 List<int> player = repoWindow.DisplayPlayerHand();
-                playerTotal =  EvaluateHand(player);
+                playerTotal = EvaluateHand(player);
 
-                if( dealerTotal > playerTotal)
+                if (dealerTotal > playerTotal)
                 {
                     Console.WriteLine("The dealer has won! ");
                     isRunning = false;
                 }
-                if( playerTotal > dealerTotal)
+                if (playerTotal > dealerTotal)
                 {
                     Console.WriteLine("The player has won! ");
                     isRunning = false;
                 }
-                if ( playerTotal == dealerTotal)
+                if (playerTotal == dealerTotal)
                 {
                     Console.WriteLine("There is a draw! ");
                     isRunning = false;
                 }
-                     
+
             }
             Console.ReadLine();
         }
@@ -154,7 +148,7 @@ namespace BlackJackGame
                 Console.ReadLine();
                 isRunning = false;
             }
-           
+
 
         }
         private void DisplayPlayersHand()
@@ -199,9 +193,9 @@ namespace BlackJackGame
             {
                 if (firstTime == true)
                 {
-                       Console.Write("* ");
-                  
-               
+                    Console.Write("* ");
+
+
                     firstTime = false;
                 }
 
